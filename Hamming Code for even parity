@@ -1,0 +1,131 @@
+#include<stdio.h>
+#include<math.h>
+#include<stdbool.h>
+// author @lokesh_bhargava
+int calc_databits(int n){
+    int c=0;
+    while(n>0){
+        c++;
+        n/=10;
+    }
+    return c;
+}
+int calc_redundent(int n){
+    // 2^r >= r + m + 1
+    int r=0;
+    while(pow(2,r)<n+r+1){
+        r++;
+    }
+    return r;
+}
+bool is_power_of_2(int n){
+    n++;
+    for(int i=0;i<10;i++){
+        if(pow(2,i)==n)
+        return true;
+    }
+    return false;
+}
+int main(){
+    int dw;
+    printf("Enter dataword :\n");
+    scanf("%d",&dw);
+    int m=calc_databits(dw);
+    int r=calc_redundent(m);
+
+    int arr[m+r];
+    for(int i=0;i<m+r;i++){
+        if(!is_power_of_2(i)){
+            arr[i]=dw%10;
+            dw/=10;
+        }
+        else{
+            arr[i]=0;
+        }
+    }
+
+    // find s1
+    int c=0;
+    for(int i=0;i<m+r;i=i+2){
+        c+=arr[i];
+    }
+    if(c%2==0)
+    arr[0]=0;
+    else
+    arr[0]=1;
+    c=0;
+
+    // find s2
+    for(int i=1;i<m+r;i=i+4){
+        c+=arr[i];
+        c+=arr[i+1];
+    }
+    if(c%2==0)
+    arr[1]=0;
+    else
+    arr[1]=1;
+    c=0;
+
+    // find s4
+    for(int i=3;i<m+r;i=i+8){
+        c+=arr[i];
+        c+=arr[i+1];
+        c+=arr[i+2];
+        c+=arr[i+3];
+    }
+    if(c%2==0)
+    arr[3]=0;
+    else
+    arr[3]=1;
+    c=0;
+
+    // find s8
+    for(int i=7;i<m+r;i=i+8){
+        c+=arr[i];
+        c+=arr[i+1];
+        c+=arr[i+2];
+        c+=arr[i+3];
+        c+=arr[i+4];
+        c+=arr[i+5];
+        c+=arr[i+6];
+        c+=arr[i+7];
+    }
+    if(c%2==0)
+    arr[7]=0;
+    else
+    arr[7]=1;
+    c=0;
+
+    // find s16
+    if(m+r>15){
+    for(int i=15;i<m+r;i=i+16){
+        c+=arr[i];
+        c+=arr[i+1];
+        c+=arr[i+2];
+        c+=arr[i+3];
+        c+=arr[i+4];
+        c+=arr[i+5];
+        c+=arr[i+6];
+        c+=arr[i+7];
+        c+=arr[i+8];
+        c+=arr[i+9];
+        c+=arr[i+10];
+        c+=arr[i+11];
+        c+=arr[i+12];
+        c+=arr[i+13];
+        c+=arr[i+14];
+        c+=arr[i+15];
+    }
+    if(c%2==0)
+    arr[15]=0;
+    else
+    arr[15]=1;
+    c=0;
+    }
+    for(int i=m+r-1;i>=0;i--)
+    printf("%d",arr[i]);
+
+    return 0;
+}
+
+///////////////////////
